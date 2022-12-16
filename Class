@@ -1,0 +1,125 @@
+public class BinarySearchTree {
+    Node_BST root;
+
+    public BinarySearchTree() {
+        root = null;
+    }
+    //--------------------- insert a node in BST-----------------------------
+    public void insert (int key){
+        root = insert_rec(root,key);
+    }
+    public Node_BST insert_rec (Node_BST root ,int key){
+        //tree is empty
+        if (root == null){
+            root = new Node_BST(key);
+            return root;
+        }
+        //traverse the tree
+        if (key < root.getKey()){   //insert in the left subtree
+            root.left = insert_rec(root.left,key);
+        }
+        else if (key > root.getKey()){   //insert in the right subtree
+            root.right = insert_rec(root.right,key);
+        }
+        return root;
+    }
+    // ----------------delete a node from BST------------------------------
+    public void deleteKey (int key){
+        root = delete_rec(root ,key);
+    }
+    public Node_BST delete_rec (Node_BST root ,int key){
+        //tree is empty
+        if (root == null){
+            return root;
+        }
+        //traverse the tree
+        if (key < root.getKey()){   //traverse left subtree
+            root.left = delete_rec(root.left,key);
+        }
+        else if (key > root.getKey()){  //traverse right subtree
+            root.right = delete_rec(root.right,key);
+        }
+        else {    // node contains only one child
+            if (root.left == null){
+                return root.right;
+            }
+            else if (root.right == null){
+                return root.left;
+            }
+            // node has two children;
+            //get inorder successor (min value in the right subtree)
+            root.setKey(minValue(root.right));
+            // Delete the inorder successor
+            root.right = delete_rec(root.right,root.getKey());
+        }
+        return root;
+    }
+    //---------------find minimum value------------------------------------- .
+    public int minValue (Node_BST root){
+        //initially minval = root
+        int minval = root.getKey();
+        //find minvalue;
+        while (root.left != null){
+            minval = root.left.getKey();
+            root = root.left;
+        }
+        return minval;
+    }
+
+    //------------------------ Search Operation In BST---------------------------.
+    public boolean search (int key){
+        root = search_rec (root ,key);
+        if (root != null){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    public Node_BST search_rec(Node_BST root ,int key){
+        if (root == null || root.getKey() == key){  //root is null or key is present at root
+            return root;
+        }
+        if (key < root.getKey()){  // val is greater than root's key
+            return search_rec(root.left,key);
+        }
+        // val is less than root's key
+            return search_rec(root.right,key);
+    }
+    //--------------------------traversals using BST------------------------=
+
+    // -------------- print all element use inorder BST---------------------- .
+    public void inOrder (){  // Left -> Root -> Rigth .
+        inOrder_rec(root);
+    }
+    public void inOrder_rec (Node_BST root){
+        if (root != null){
+            inOrder_rec(root.left);
+            System.out.println(root.getKey() + " ");
+            inOrder_rec(root.right);
+        }
+    }
+    // -------------- print all element use preorder BST---------------------- .
+    public void preOrder (){  //  Root -> Left ->Rigth .
+        preOrder_rec(root);
+    }
+    public void preOrder_rec (Node_BST root){ // Root -> Left -> Rigth .
+        if (root != null){
+            System.out.println(root.getKey() + " ");
+            inOrder_rec(root.left);
+            inOrder_rec(root.right);
+        }
+    }
+    // -------------- print all element use postorder BST---------------------- .
+    public void postOrder (){  // Left -> Right -> Root .
+        preOrder_rec(root);
+    }
+    public void postOrder_rec (Node_BST root){ //   Left -> Rigth -> Root.
+        if (root != null){
+            inOrder_rec(root.left);
+            inOrder_rec(root.right);
+            System.out.println(root.getKey() + " ");
+        }
+    }
+
+}
